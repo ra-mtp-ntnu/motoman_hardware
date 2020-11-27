@@ -41,7 +41,10 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE "MOTOMAN_HARDWARE_BUILDING_LI
 
 pluginlib_export_plugin_description_file(hardware_interface motoman_hardware.xml)
 
-
+install(
+  DIRECTORY controllers description launch/
+  DESTINATION share/${PROJECT_NAME}
+)
 install(
   DIRECTORY include/
   DESTINATION include
