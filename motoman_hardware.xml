@@ -1,0 +1,7 @@
+<library path="motoman_hardware">
+    <class name="motoman_hardware/MotomanHardware" type="motoman_hardware::MotomanHardware" base_class_type="hardware_interface::components::SystemInterface">
+        <description>
+          Motoman hardware
+      </description>
+    </class>
+</library>
