@@ -88,7 +88,12 @@ return_type MotomanHardware::configure(const hardware_interface::HardwareInfo& i
   }
 
   udp_ip_address_ = info_.hardware_parameters["udp_ip_address"];
-  udp_port_ = stoi(info_.hardware_parameters["udp_port"]);
+
+  RCLCPP_INFO(rclcpp::get_logger("MotomanHardware"), udp_ip_address_);
+
+  
+  udp_port_ = static_cast<uint16_t>(stoi(info_.hardware_parameters["udp_port"]));
+  udp_ip_address_ = info_.hardware_parameters["udp_ip_address"];
   udp_server_socket_.bind(Poco::Net::SocketAddress(udp_ip_address_, udp_port_));
 
   status_ = hardware_interface::status::CONFIGURED;
@@ -170,14 +175,9 @@ return_type MotomanHardware::read()
 {
   RCLCPP_INFO(rclcpp::get_logger("MotomanHardware"), "Reading...");
 
-  // udp_server_socket_.receiveFrom()
+  udp_server_socket_.receiveFrom(&state_msg_, sizeof(state_msg_), udp_client_address_);
 
-  for (uint i = 0; i < hw_states_.size(); i++)
-  {
-    // Simulate RRBot's movement
-    hw_states_[i] = hw_commands_[i] + (hw_states_[i] - hw_commands_[i]) / hw_slowdown_;
-    RCLCPP_INFO(rclcpp::get_logger("MotomanHardware"), "Got state %.5f for joint %d!", hw_states_[i], i);
-  }
+
   RCLCPP_INFO(rclcpp::get_logger("MotomanHardware"), "Joints sucessfully read!");
 
   return return_type::OK;
@@ -185,14 +185,18 @@ return_type MotomanHardware::read()
 
 return_type MotomanHardware::write()
 {
-  RCLCPP_INFO(rclcpp::get_logger("MotomanHardware"), "Writing...");
+  // RCLCPP_INFO(rclcpp::get_logger("MotomanHardware"), "Writing...");
 
-  for (uint i = 0; i < hw_commands_.size(); i++)
-  {
-    // Simulate sending commands to the hardware
-    RCLCPP_INFO(rclcpp::get_logger("MotomanHardware"), "Got command %.5f for joint %d!", hw_commands_[i], i);
-  }
-  RCLCPP_INFO(rclcpp::get_logger("MotomanHardware"), "Joints sucessfully written!");
+  command_msg_.header.msg_type = simple_message::MsgType::MOTO_REALTIME_MOTION_JOINT_COMMAND_EX;
+  command_msg_.header.comm_type = simple_message::CommType::TOPIC;
+  command_msg_.header.reply_type = simple_message::ReplyType::INVALID;
+
+  command_msg_.body.joint_command_ex.message_id = state_msg_.body.joint_state_ex.message_id;
+  command_msg_.body.joint_command_ex.number_of_valid_groups = state_msg_.body.joint_state_ex.number_of_valid_groups;
+
+  udp_server_socket_.sendTo(&command_msg_, sizeof(command_msg_), udp_client_address_);
+
+  // RCLCPP_INFO(rclcpp::get_logger("MotomanHardware"), "Joints sucessfully written!");
   return return_type::OK;
 }
 

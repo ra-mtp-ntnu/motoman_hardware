@@ -73,6 +73,9 @@ private:
   Poco::Net::DatagramSocket udp_server_socket_;
   Poco::Net::SocketAddress udp_client_address_;
 
+  simple_message::SimpleMessage state_msg_;
+  simple_message::SimpleMessage command_msg_;
+
 };
 
 }  // namespace motoman_hardware
