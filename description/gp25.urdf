@@ -165,48 +165,56 @@
       <param name="example_param_hw_start_duration_sec">2.0</param>
       <param name="example_param_hw_stop_duration_sec">3.0</param>
       <param name="example_param_hw_slowdown">2.0</param>
+      <param name="udp_ip_address">"192.168.255.3"</param>
+      <param name="udp_port">50244</param>
     </hardware>
     <joint name="joint_1_s">
-      <command_interface name="position">
+      <command_interface name="velocity">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
       <state_interface name="position"/>
+      <state_interface name="velocity"/>
     </joint>
     <joint name="joint_2_l">
-      <command_interface name="position">
+      <command_interface name="velocity">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
       <state_interface name="position"/>
+      <state_interface name="velocity"/>
     </joint>
     <joint name="joint_3_u">
-      <command_interface name="position">
+      <command_interface name="velocity">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
       <state_interface name="position"/>
+      <state_interface name="velocity"/>
     </joint>
     <joint name="joint_4_r">
-      <command_interface name="position">
+      <command_interface name="velocity">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
       <state_interface name="position"/>
+      <state_interface name="velocity"/>
     </joint>
     <joint name="joint_5_b">
-      <command_interface name="position">
+      <command_interface name="velocity">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
       <state_interface name="position"/>
+      <state_interface name="velocity"/>
     </joint>
     <joint name="joint_6_t">
-      <command_interface name="position">
+      <command_interface name="velocity">
         <param name="min">-1</param>
         <param name="max">1</param>
       </command_interface>
       <state_interface name="position"/>
+      <state_interface name="velocity"/>
     </joint>
   </ros2_control>
 </robot>

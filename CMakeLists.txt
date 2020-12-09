@@ -17,6 +17,8 @@ find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
 
+find_package(Poco REQUIRED COMPONENTS Net Foundation)
+
 ## COMPILE
 add_library(
   ${PROJECT_NAME}
@@ -27,6 +29,10 @@ add_library(
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
+
+target_link_libraries(${PROJECT_NAME}
+  Poco::Foundation
+  Poco::Net)
 
 ament_target_dependencies(
   ${PROJECT_NAME}

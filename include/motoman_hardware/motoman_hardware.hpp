@@ -17,36 +17,34 @@
 
 #include <memory>
 
+#include <Poco/Net/DatagramSocket.h>
+#include <Poco/Net/NetException.h>
+
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/macros.hpp>
 
 #include <angles/angles.h>
-#include <hardware_interface/robot_hardware.hpp>
-#include <hardware_interface/types/hardware_interface_return_values.hpp>
 
-#include "hardware_interface/components/base_interface.hpp"
-#include "hardware_interface/components/system_interface.hpp"
+#include "hardware_interface/base_interface.hpp"
+#include "hardware_interface/system_interface.hpp"
 #include "hardware_interface/handle.hpp"
 #include "hardware_interface/hardware_info.hpp"
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
 #include "hardware_interface/types/hardware_interface_status_values.hpp"
 
-
 #include <motoman_hardware/visibility_control.h>
+#include <motoman_hardware/simple_message.hpp>
 
 using hardware_interface::return_type;
 
 namespace motoman_hardware
 {
-class MotomanHardware
-  : public hardware_interface::components::BaseInterface<hardware_interface::components::SystemInterface>
+class MotomanHardware : public hardware_interface::BaseInterface<hardware_interface::SystemInterface>
 {
-public:
-
 public:
   RCLCPP_SHARED_PTR_DEFINITIONS(MotomanHardware);
 
-  return_type configure(const hardware_interface::HardwareInfo & info) override;
+  return_type configure(const hardware_interface::HardwareInfo& info) override;
 
   std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
 
@@ -65,6 +63,16 @@ private:
   double hw_start_sec_, hw_stop_sec_, hw_slowdown_;
   // Store the command for the simulated robot
   std::vector<double> hw_commands_, hw_states_;
+
+  std::vector<double> positions_;
+  std::vector<double> velocities_;
+  std::vector<double> commands_;
+
+  std::string udp_ip_address_;
+  uint16_t udp_port_;
+  Poco::Net::DatagramSocket udp_server_socket_;
+  Poco::Net::SocketAddress udp_client_address_;
+
 };
 
 }  // namespace motoman_hardware
